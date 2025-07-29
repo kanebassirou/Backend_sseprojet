@@ -1,288 +1,301 @@
 # Système de Suivi et d'Évaluation de Projets (SSE Projet)
 
-## 📋 Description
+## 📖 Description
 
-SSE Projet est une application Spring Boot dédiée à la gestion et au suivi de projets. Elle permet aux équipes de gérer efficacement leurs projets, de suivre les indicateurs de performance, d'effectuer des évaluations et de générer des rapports détaillés.
+Le **Système de Suivi et d'Évaluation de Projets (SSE)** est une application web moderne développée avec Spring Boot qui permet de gérer le cycle de vie complet des projets : de leur création à leur évaluation, en passant par le suivi des indicateurs de performance et la génération de rapports.
 
-## 🏗️ Architecture du Projet
+## 🏗️ Architecture Technique
 
-### Technologies Utilisées
-
-- **Framework** : Spring Boot 3.5.4
-- **Java** : Java 21
+### **Technologies utilisées**
+- **Backend** : Spring Boot 3.3.5
+- **Java** : Version 21
 - **Base de données** : PostgreSQL
-- **ORM** : Spring Data JPA avec Hibernate
-- **Build Tool** : Maven
-- **Validation** : Spring Boot Validation
-- **Dev Tools** : Spring Boot DevTools
-- **Autres** : Lombok pour réduire le code boilerplate
+- **ORM** : JPA/Hibernate
+- **Documentation API** : Swagger/OpenAPI 3
+- **Validation** : Bean Validation (Jakarta)
+- **Build** : Maven
+- **Tests API** : Postman
 
-### Structure du Projet
-
+### **Architecture en couches**
 ```
-src/
-├── main/
-│   ├── java/com/sseprojet/sseprojet/
-│   │   ├── SseprojetApplication.java        # Point d'entrée de l'application
-│   │   ├── controller/                       # Contrôleurs REST
-│   │   │   ├── IndicateurController.java
-│   │   │   ├── ProjetController.java
-│   │   │   └── UserController.java
-│   │   ├── model/                           # Entités JPA
-│   │   │   ├── User.java (classe abstraite)
-│   │   │   ├── Administrateur.java
-│   │   │   ├── ChefDeProjet.java
-│   │   │   ├── Decideur.java
-│   │   │   ├── Evaluateur.java
-│   │   │   ├── Projet.java
-│   │   │   ├── Indicateur.java
-│   │   │   ├── Evaluation.java
-│   │   │   ├── Rapport.java
-│   │   │   └── Tache.java
-│   │   ├── repository/                      # Repositories JPA
-│   │   │   ├── UserRepository.java
-│   │   │   ├── ChefDeProjetRepository.java
-│   │   │   ├── ProjetRepository.java
-│   │   │   ├── IndicateurRepository.java
-│   │   │   ├── EvaluationRepository.java
-│   │   │   ├── RapportRepository.java
-│   │   │   └── TacheRepository.java
-│   │   └── service/                         # Services métier
-│   │       ├── UserService.java
-│   │       └── ProjetService.java
-│   └── resources/
-│       └── application.properties           # Configuration de l'application
-└── test/                                    # Tests unitaires
+┌─────────────────────────────────────┐
+│           Controllers               │  ← API REST + Documentation Swagger
+├─────────────────────────────────────┤
+│              DTOs                   │  ← Transfert de données + Validation
+├─────────────────────────────────────┤
+│             Services                │  ← Logique métier + Mappers
+├─────────────────────────────────────┤
+│          Repositories               │  ← Accès aux données JPA
+├─────────────────────────────────────┤
+│             Models                  │  ← Entités JPA + Héritage
+├─────────────────────────────────────┤
+│           PostgreSQL                │  ← Base de données relationnelle
+└─────────────────────────────────────┘
 ```
 
-## 🔧 Fonctionnalités Implémentées
+## 🎯 Fonctionnalités Principales
 
-### 1. Gestion des Utilisateurs ✅
+### **👥 Gestion des Utilisateurs**
 - **Types d'utilisateurs** : Administrateur, Chef de Projet, Décideur, Évaluateur
-- **Héritage** : Utilisation de l'héritage JPA avec stratégie SINGLE_TABLE
-- **Validation** : Email unique, champs obligatoires
-- **API REST** : CRUD complet pour les utilisateurs (UserController + UserService)
-- **Repository** : Recherche par email, vérification d'existence
+- **Héritage JPA** : Tous stockés dans la table `users` avec discriminateur
+- **CRUD complet** : Création, lecture, mise à jour, suppression
+- **Factory Pattern** : Création automatique selon le type
 
-### 2. Gestion des Projets ✅
-- **Entité Projet** : Titre, description, dates, budget, statut
-- **Relations** : Un projet appartient à un Chef de Projet
-- **API REST** : CRUD complet (ProjetController + ProjetService)
-  - Récupération de tous les projets
-  - Recherche par ID, statut, titre
-  - Création, mise à jour, suppression
-- **Filtrage** : Par statut et recherche textuelle dans le titre
+### **📋 Gestion des Projets**
+- **Cycle de vie complet** : Planification → En cours → Terminé → Suspendu
+- **Relations** : Association avec les chefs de projet
+- **DTOs** : Évite les références circulaires
+- **Validation** : Contraintes métier (dates, budget, etc.)
 
-### 3. Système d'Indicateurs ✅
-- **Entité Indicateur** : Nom, type, objectif
-- **Relations** : Indicateurs liés aux projets
-- **API REST** : CRUD complet avec filtrage par projet et type (IndicateurController)
-- **Repository** : Recherche par projet et par type
+### **📊 Gestion des Indicateurs**
+- **Types** : Performance, Qualité, Financier, Temporel
+- **Association** : Liés aux projets
+- **Suivi** : Valeurs cibles et réelles
 
-## 📋 Modèles de Données Implémentés
+### **🔍 Évaluations**
+- **Multi-évaluateurs** : Système d'évaluation collaborative
+- **Critères** : Évaluation selon différents critères
+- **Historique** : Traçabilité des évaluations
 
-### Entités Complètement Implémentées
-- **User** (classe abstraite) : Base pour tous les utilisateurs
-- **Administrateur** : Hérite de User
-- **ChefDeProjet** : Hérite de User, peut gérer plusieurs projets
-- **Decideur** : Hérite de User  
-- **Evaluateur** : Hérite de User
-- **Projet** : Entité principale avec relations vers toutes les autres entités
-- **Indicateur** : Entité liée aux projets
-- **Evaluation** : Entité liée aux projets (modèle + repository)
-- **Rapport** : Entité liée aux projets (modèle + repository)
-- **Tache** : Entité liée aux projets (modèle + repository)
+### **📄 Rapports**
+- **Génération automatique** : Basée sur les données projets
+- **Formats** : Support de différents formats de sortie
+- **Planification** : Rapports périodiques ou à la demande
 
-### Repositories Implémentés
-- **UserRepository** : CRUD + recherche par email
-- **ProjetRepository** : CRUD + recherche par chef de projet, statut, titre
-- **IndicateurRepository** : CRUD + recherche par projet et type
-- **EvaluationRepository** : CRUD + recherche par projet et plage de dates
-- **RapportRepository** : CRUD + recherche par projet et auteur
-- **TacheRepository** : CRUD + recherche par projet et statut
-- **ChefDeProjetRepository** : CRUD de base
+### **✅ Tâches**
+- **Décomposition** : Tâches liées aux projets
+- **Statuts** : Suivi de l'avancement
+- **Assignation** : Attribution aux membres d'équipe
 
-## 🗄️ Modèle de Base de Données
+## 📚 Documentation API (Swagger)
 
-### Tables Principales
-- `users` : Stockage des utilisateurs avec discriminateur de rôle
-- `projets` : Informations sur les projets
-- `indicateurs` : Indicateurs de performance des projets
-- `evaluations` : Évaluations périodiques des projets
-- `rapports` : Rapports générés pour les projets
-- `taches` : Tâches associées aux projets
+### **Accès à la documentation**
+Une fois l'application démarrée, accédez à :
 
-### Relations
-- `User` → `ChefDeProjet` (héritage)
-- `ChefDeProjet` → `Projet` (One-to-Many)
-- `Projet` → `Indicateur` (One-to-Many)
-- `Projet` → `Evaluation` (One-to-Many)
-- `Projet` → `Rapport` (One-to-Many)
-- `Projet` → `Tache` (One-to-Many)
+#### **Interface Swagger UI (Interactive)**
+```
+http://localhost:8080/swagger-ui.html
+```
+*Interface web permettant de tester tous les endpoints directement*
 
-## 🚀 Installation et Configuration
+#### **Spécification OpenAPI JSON**
+```
+http://localhost:8080/api-docs
+```
+*Documentation complète au format JSON pour intégration*
 
-### Prérequis
-- Java 21 ou supérieur
-- Maven 3.6+
+### **Fonctionnalités de la documentation Swagger**
+- ✅ **Interface interactive** pour tester tous les endpoints
+- ✅ **Schémas complets** des modèles de données avec exemples
+- ✅ **Validation en temps réel** des paramètres
+- ✅ **Codes de statut HTTP** détaillés avec descriptions
+- ✅ **Exemples de requêtes/réponses** pour chaque endpoint
+- ✅ **Groupement par ressources** (Users, Projets, Indicateurs)
+- ✅ **Documentation des DTOs** avec contraintes de validation
+
+### **APIs documentées**
+- **👥 Users API** : Gestion complète des utilisateurs
+- **📋 Projets API** : CRUD projets avec DTOs optimisés
+- **📊 Indicateurs API** : Gestion des indicateurs de performance
+- **🔍 Évaluations API** : Système d'évaluation
+- **📄 Rapports API** : Génération et consultation
+- **✅ Tâches API** : Gestion des tâches projet
+
+## 🗄️ Modèle de Données
+
+### **Structure de la base de données**
+```sql
+-- 6 tables principales
+├── users          -- Tous les utilisateurs (avec héritage)
+├── projets         -- Projets et leur cycle de vie
+├── indicateurs     -- Indicateurs de performance
+├── evaluations     -- Évaluations des projets
+├── rapports        -- Rapports générés
+└── taches          -- Tâches des projets
+```
+
+### **Héritage des utilisateurs**
+```java
+User (abstract)
+├── Administrateur    -- Gestion système
+├── ChefDeProjet      -- Gestion projets
+├── Decideur          -- Validation projets
+└── Evaluateur        -- Évaluations
+```
+
+### **Relations principales**
+- `ChefDeProjet` → `List<Projet>` (One-to-Many)
+- `Projet` → `List<Indicateur>` (One-to-Many)
+- `Projet` → `List<Evaluation>` (One-to-Many)
+- `Projet` → `List<Tache>` (One-to-Many)
+- `Evaluateur` → `List<Evaluation>` (One-to-Many)
+
+## 🚀 Installation et Démarrage
+
+### **Prérequis**
+- Java 21+
+- Maven 3.8+
 - PostgreSQL 17+
 - Git
 
-### Configuration de la Base de Données
+### **Configuration de la base de données**
+1. **Créer la base de données** :
+``
 
-1. Créer une base de données PostgreSQL :
-```sql
-CREATE DATABASE sseprojetdb;
-```
-
-2. Modifier le fichier `application.properties` :
+2. **Configurer l'application** dans `src/main/resources/application.properties` :
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/sseprojetdb
-spring.datasource.username=votre_utilisateur
-spring.datasource.password=votre_mot_de_passe
+# Base de données
+spring.datasource.url=jdbc:postgresql://localhost:5432/sseprojet
+spring.datasource.username=sseuser
+spring.datasource.password=ssepassword
+
+# JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# Swagger/OpenAPI
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.api-docs.path=/api-docs
 ```
 
-### Lancement de l'Application
-
-1. Cloner le repository
-2. Naviguer vers le répertoire du projet
-3. Lancer l'application :
-
-**Avec Maven :**
+### **Installation et lancement**
 ```bash
-./mvnw spring-boot:run
+# 1. Cloner le projet
+git clone le ripo git
+cd sseprojet
+
+# 2. Installer les dépendances
+mvn clean install
+
+# 3. Démarrer l'application
+mvn spring-boot:run
 ```
 
-**Ou en PowerShell (Windows) :**
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-L'application sera accessible sur `http://localhost:8080`
-
-## 📡 API REST Endpoints Implémentés
-
-### Utilisateurs (`/api/users`) ✅
-- `GET /api/users` - Récupérer tous les utilisateurs
-- `GET /api/users/{id}` - Récupérer un utilisateur par ID
-- `GET /api/users/email/{email}` - Récupérer un utilisateur par email
-- `POST /api/users` - Créer un nouvel utilisateur
-- `PUT /api/users/{id}` - Mettre à jour un utilisateur
-- `DELETE /api/users/{id}` - Supprimer un utilisateur
-
-### Projets (`/api/projets`) ✅
-- `GET /api/projets` - Récupérer tous les projets
-- `GET /api/projets/{id}` - Récupérer un projet par ID
-- `GET /api/projets/statut/{statut}` - Filtrer par statut
-- `GET /api/projets/search?titre={titre}` - Rechercher par titre
-- `POST /api/projets` - Créer un nouveau projet
-- `PUT /api/projets/{id}` - Mettre à jour un projet
-- `DELETE /api/projets/{id}` - Supprimer un projet
-
-### Indicateurs (`/api/indicateurs`) ✅
-- `GET /api/indicateurs` - Récupérer tous les indicateurs
-- `GET /api/indicateurs/{id}` - Récupérer un indicateur par ID
-- `GET /api/indicateurs/projet/{projetId}` - Indicateurs par projet
-- `GET /api/indicateurs/type/{type}` - Indicateurs par type
-- `POST /api/indicateurs` - Créer un nouvel indicateur
-- `PUT /api/indicateurs/{id}` - Mettre à jour un indicateur
-- `DELETE /api/indicateurs/{id}` - Supprimer un indicateur
-
-## 🚧 Fonctionnalités à Implémenter
-
-### API REST Manquantes
-- **Evaluations** (`/api/evaluations`) - Contrôleur et service à créer
-- **Rapports** (`/api/rapports`) - Contrôleur et service à créer  
-- **Tâches** (`/api/taches`) - Contrôleur et service à créer
-
-### Services Manquants
-- **IndicateurService** - Service métier pour les indicateurs
-- **EvaluationService** - Service métier pour les évaluations
-- **RapportService** - Service métier pour les rapports
-- **TacheService** - Service métier pour les tâches
-
-## 🔐 Gestion des Rôles
-
-Le système implémente quatre types d'utilisateurs :
-
-1. **Administrateur** : Gestion complète du système
-2. **Chef de Projet** : Gestion des projets assignés
-3. **Décideur** : Consultation des rapports et indicateurs
-4. **Évaluateur** : Saisie des évaluations
-
-## 📈 Fonctionnalités Avancées
-
-### Validation des Données
-- Validation des emails
-- Champs obligatoires
-- Contraintes d'unicité (email des utilisateurs)
-
-### Configuration JPA
-- Génération automatique des tables (`hibernate.ddl-auto=update`)
-- Affichage des requêtes SQL en mode développement
-- Dialecte PostgreSQL optimisé
-
-### CORS
-- Configuration CORS permissive pour le développement (`origins = "*"`)
-
-## 🧪 Tests
-
-Le projet inclut des tests de base :
-- Test de chargement du contexte Spring Boot
-- Structure prête pour l'ajout de tests unitaires et d'intégration
-
-## 📦 Build et Déploiement
-
-### Construction du projet
+### **Vérification du démarrage**
 ```bash
-./mvnw clean package
+# Vérifier que l'application fonctionne
+curl http://localhost:8080/api/users
+
+# Accéder à Swagger UI
+http://localhost:8080/swagger-ui.html
 ```
 
-### Exécution du JAR
-```bash
-java -jar target/sseprojet-0.0.1-SNAPSHOT.jar
+## 🧪 Tests et Validation
+
+### **Tests avec Postman**
+
+#### **Collection complète disponible**
+Importez la collection Postman fournie pour tester tous les endpoints :
+
+#### **1. Créer un utilisateur**
+```http
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+    "nom": "Jean Admin",
+    "email": "admin@exemple.com",
+    "motDePasseHash": "admin123",
+    "type": "ADMINISTRATEUR"
+}
 ```
 
-## 🔍 Prochaines Étapes de Développement
+#### **2. Créer un projet**
+```http
+POST http://localhost:8080/api/projets
+Content-Type: application/json
 
-1. **Compléter les Services** :
-   - Créer `IndicateurService` pour la logique métier des indicateurs
-   - Créer `EvaluationService` pour la gestion des évaluations
-   - Créer `RapportService` pour la génération de rapports
-   - Créer `TacheService` pour la gestion des tâches
+{
+    "titre": "Application Mobile E-Commerce",
+    "description": "Développement d'une application mobile complète",
+    "dateDebut": "2025-01-15",
+    "dateFin": "2025-08-30",
+    "budget": 75000,
+    "statut": "EN_COURS",
+    "chefDeProjetId": 3
+}
+```
 
-2. **Compléter les API REST** :
-   - Créer `EvaluationController` avec endpoints CRUD
-   - Créer `RapportController` avec endpoints CRUD
-   - Créer `TacheController` avec endpoints CRUD
+#### **3. Créer un indicateur**
+```http
+POST http://localhost:8080/api/indicateurs
+Content-Type: application/json
 
-3. **Améliorations Techniques** :
-   - Implémentation de Spring Security pour l'authentification
-   - Ajout de validation plus avancée des données
-   - Tests unitaires et d'intégration
-   - Gestion d'erreurs avec `@ControllerAdvice`
-   - Documentation API avec Swagger/OpenAPI
+{
+    "nom": "Taux d'avancement",
+    "type": "PERFORMANCE",
+    "objectif": "Mesurer le pourcentage de completion",
+    "projet": {"id": 1}
+}
+```
 
-4. **Fonctionnalités Avancées** :
-   - Pagination pour les listes importantes
-   - Système de notifications
-   - Tableaux de bord et statistiques
-   - Export de données (PDF, Excel)
+### **Réponses attendues**
+✅ **Pas de références circulaires** grâce aux DTOs  
+✅ **Validation automatique** des données d'entrée  
+✅ **Codes de statut appropriés** (200, 201, 400, 404)  
+✅ **Format JSON cohérent** et documenté
 
-## 🤝 Contribution
+## 📁 Structure du Projet
 
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/nouvelle-fonctionnalite`)
-3. Commit les changements (`git commit -am 'Ajout nouvelle fonctionnalité'`)
-4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
-5. Créer une Pull Request
+```
+src/
+├── main/java/com/sseprojet/sseprojet/
+│   ├── config/           # Configuration (Swagger, etc.)
+│   │   └── SwaggerConfig.java
+│   ├── controller/       # Contrôleurs REST
+│   │   ├── UserController.java
+│   │   ├── ProjetController.java
+│   │   └── IndicateurController.java
+│   ├── dto/             # DTOs et validation
+│   │   ├── CreateUserRequest.java
+│   │   ├── CreateProjetRequest.java
+│   │   └── ProjetResponse.java
+│   ├── factory/         # Factory pattern
+│   │   └── UserFactory.java
+│   ├── model/           # Entités JPA
+│   │   ├── User.java (abstract)
+│   │   ├── Administrateur.java
+│   │   ├── ChefDeProjet.java
+│   │   ├── Decideur.java
+│   │   ├── Evaluateur.java
+│   │   ├── Projet.java
+│   │   ├── Indicateur.java
+│   │   ├── Evaluation.java
+│   │   ├── Rapport.java
+│   │   └── Tache.java
+│   ├── repository/      # Repositories JPA
+│   │   ├── UserRepository.java
+│   │   ├── ProjetRepository.java
+│   │   └── IndicateurRepository.java
+│   ├── service/         # Services métier
+│   │   ├── UserService.java
+│   │   ├── ProjetService.java
+│   │   ├── IndicateurService.java
+│   │   └── ProjetMapperService.java
+│   └── SseprojetApplication.java
+├── main/resources/
+│   ├── application.properties
+│   └── static/          # Ressources statiques
+└── test/                # Tests unitaires
+```
 
-## 📄 Licence
+## 🔧 Fonctionnalités Avancées
 
-Ce projet est sous licence libre pour usage éducatif et professionnel.
+### **DTOs et Mapping**
+- **Évite les références circulaires** entre entités
+- **Contrôle total** de la sérialisation JSON
+- **Validation centralisée** avec Bean Validation
+- **Services de mapping** pour conversion entité ↔ DTO
 
----
+### **Factory Pattern**
+- **Création automatique** d'utilisateurs selon le type
+- **Encapsulation** de la logique de création
+- **Extensibilité** pour nouveaux types d'utilisateurs
 
-**Version** : 0.0.1-SNAPSHOT  
-**Date de dernière mise à jour** : 29 juillet 2025  
-**Auteur** : Bassirou Kane
+### **Héritage JPA**
+- **Table unique** pour tous les utilisateurs
+- **Polymorphisme** avec discriminateur
+- **Relations spécialisées** selon le type d'utilisateur
+
+
