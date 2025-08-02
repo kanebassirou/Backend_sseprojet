@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -27,12 +28,14 @@ public class IndicateurController {
     private ProjetService projetService;
     
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<List<Indicateur>> getAllIndicateurs() {
         List<Indicateur> indicateurs = indicateurRepository.findAll();
         return ResponseEntity.ok(indicateurs);
     }
     
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<Indicateur> getIndicateurById(@PathVariable Integer id) {
         Optional<Indicateur> indicateur = indicateurRepository.findById(id);
         return indicateur.map(ResponseEntity::ok)
@@ -40,6 +43,7 @@ public class IndicateurController {
     }
     
     @GetMapping("/projet/{projetId}")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<Indicateur>> getIndicateursByProjet(@PathVariable Integer projetId) {
         Optional<Projet> projet = projetService.getProjetById(projetId);
         if (projet.isPresent()) {
@@ -50,6 +54,7 @@ public class IndicateurController {
     }
     
     @GetMapping("/type/{type}")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<Indicateur>> getIndicateursByType(@PathVariable String type) {
         List<Indicateur> indicateurs = indicateurRepository.findByType(type);
         return ResponseEntity.ok(indicateurs);

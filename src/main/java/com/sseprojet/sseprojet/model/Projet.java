@@ -1,5 +1,6 @@
 package com.sseprojet.sseprojet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,9 +43,11 @@ public class Projet {
     // Relations
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chef_projet_id", nullable = false)
+    @JsonIgnoreProperties({"projets"})
     private ChefDeProjet chefDeProjet;
     
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"projet"})
     private List<Indicateur> indicateurs = new ArrayList<>();
     
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

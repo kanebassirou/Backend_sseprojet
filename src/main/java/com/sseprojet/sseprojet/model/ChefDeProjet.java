@@ -1,5 +1,6 @@
 package com.sseprojet.sseprojet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class ChefDeProjet extends User {
     
     // Relations
     @OneToMany(mappedBy = "chefDeProjet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"chefDeProjet", "indicateurs"})
     private List<Projet> projets = new ArrayList<>();
     
     // Constructeurs

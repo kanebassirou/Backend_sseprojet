@@ -1,5 +1,6 @@
 package com.sseprojet.sseprojet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -27,6 +28,7 @@ public class Indicateur {
     // Relations
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projet_id", nullable = false)
+    @JsonIgnoreProperties({"indicateurs", "chefDeProjet"})
     private Projet projet;
     
     // Constructeurs
