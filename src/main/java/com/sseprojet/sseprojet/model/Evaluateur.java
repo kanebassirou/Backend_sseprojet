@@ -1,5 +1,7 @@
 package com.sseprojet.sseprojet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 
 /**
@@ -7,7 +9,14 @@ import jakarta.persistence.*;
  */
 @Entity
 @DiscriminatorValue("EVALUATEUR")
+@JsonTypeName("EVALUATEUR")
 public class Evaluateur extends User {
+    
+    // Relations
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projet_id")
+    @JsonIgnoreProperties({"evaluateurs"})
+    private Projet projet;
     
     // Constructeurs
     public Evaluateur() {
@@ -27,5 +36,14 @@ public class Evaluateur extends User {
     
     public void saisirEvaluations() {
         // Logique de saisie des évaluations
+    }
+    
+    // Getters et Setters pour la relation
+    public Projet getProjet() {
+        return projet;
+    }
+    
+    public void setProjet(Projet projet) {
+        this.projet = projet;
     }
 }

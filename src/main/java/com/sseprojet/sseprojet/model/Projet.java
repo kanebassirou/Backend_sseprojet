@@ -51,7 +51,7 @@ public class Projet {
     private List<Indicateur> indicateurs = new ArrayList<>();
     
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Evaluation> evaluations = new ArrayList<>();
+    private List<Evaluateur> evaluateurs = new ArrayList<>();
     
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Rapport> rapports = new ArrayList<>();
@@ -83,8 +83,8 @@ public class Projet {
         return indicateurs;
     }
     
-    public List<Evaluation> getEvaluations() {
-        return evaluations;
+    public List<Evaluateur> getEvaluateurs() {
+        return evaluateurs;
     }
     
     public List<Rapport> getRapports() {
@@ -160,8 +160,8 @@ public class Projet {
         this.indicateurs = indicateurs;
     }
     
-    public void setEvaluations(List<Evaluation> evaluations) {
-        this.evaluations = evaluations;
+    public void setEvaluateurs(List<Evaluateur> evaluateurs) {
+        this.evaluateurs = evaluateurs;
     }
     
     public void setRapports(List<Rapport> rapports) {
