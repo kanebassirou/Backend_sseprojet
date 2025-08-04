@@ -1,0 +1,114 @@
+<div class="dashboard-container">
+  <h1>Tableau de Bord SSEProjet</h1>
+  
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des données...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadDashboardData()">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error" class="stats-grid">
+    <mat-grid-list cols="3" rowHeight="200px" gutterSize="16px">
+      
+      <!-- Statistiques Projets -->
+      <mat-grid-tile>
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>folder</mat-icon>
+              Projets
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="stat-number">{{ stats.totalProjets }}</div>
+            <div class="stat-label">Total</div>
+            <div class="stat-detail">{{ stats.projetsEnCours }} en cours</div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button routerLink="/projets">
+              <mat-icon>visibility</mat-icon>
+              Voir tout
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+
+      <!-- Statistiques Tâches -->
+      <mat-grid-tile>
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>task</mat-icon>
+              Tâches
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="stat-number">{{ stats.totalTaches }}</div>
+            <div class="stat-label">Total</div>
+            <div class="stat-detail warning" *ngIf="stats.tachesEnRetard > 0">
+              {{ stats.tachesEnRetard }} en retard
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button routerLink="/taches">
+              <mat-icon>visibility</mat-icon>
+              Voir tout
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+
+      <!-- Statistiques Rapports -->
+      <mat-grid-tile>
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>description</mat-icon>
+              Rapports
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="stat-number">{{ stats.totalRapports }}</div>
+            <div class="stat-label">Total</div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button routerLink="/rapports">
+              <mat-icon>visibility</mat-icon>
+              Voir tout
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+  </div>
+
+  <!-- Actions rapides -->
+  <div class="quick-actions" *ngIf="!loading && !error">
+    <h2>Actions Rapides</h2>
+    <div class="actions-grid">
+      <button mat-raised-button color="primary" routerLink="/projets/nouveau">
+        <mat-icon>add</mat-icon>
+        Nouveau Projet
+      </button>
+      <button mat-raised-button color="accent" routerLink="/taches/nouveau">
+        <mat-icon>add_task</mat-icon>
+        Nouvelle Tâche
+      </button>
+      <button mat-raised-button routerLink="/rapports/nouveau">
+        <mat-icon>note_add</mat-icon>
+        Nouveau Rapport
+      </button>
+      <button mat-raised-button routerLink="/users">
+        <mat-icon>people</mat-icon>
+        Gérer Utilisateurs
+      </button>
+    </div>
+  </div>
+</div>

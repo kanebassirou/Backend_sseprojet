@@ -1,0 +1,99 @@
+.projet-list-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #333;
+  font-weight: 300;
+  margin: 0;
+}
+
+.filters-card {
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+}
+
+.error {
+  color: #f44336;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.projets-table {
+  width: 100%;
+}
+
+.projet-title strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.projet-description {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+.chef-info .email {
+  font-size: 12px;
+  color: #666;
+}
+
+.count-chip {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .projets-table {
+    font-size: 14px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

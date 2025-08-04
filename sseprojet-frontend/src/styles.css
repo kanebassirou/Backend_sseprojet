@@ -1,0 +1,92 @@
+/* Global styles for Angular Material and application */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+/* Global application styles */
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+/* Utility classes */
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.margin-top {
+  margin-top: 16px;
+}
+
+.margin-bottom {
+  margin-bottom: 16px;
+}
+
+/* Material table customizations */
+.mat-mdc-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-mdc-header-row {
+  background-color: #f5f5f5;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Card customizations */
+.mat-mdc-card {
+  margin-bottom: 16px;
+}
+
+/* Button customizations */
+.mat-mdc-button, .mat-mdc-raised-button {
+  border-radius: 6px;
+}
+
+/* Form field customizations */
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Loading and error states */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  flex-direction: column;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  flex-direction: column;
+  color: #f44336;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .mat-mdc-table {
+    font-size: 14px;
+  }
+  
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    padding: 8px;
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

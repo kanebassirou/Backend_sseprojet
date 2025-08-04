@@ -1,0 +1,103 @@
+<div class="indicateur-list-container">
+  <div class="header">
+    <h1>Gestion des Indicateurs</h1>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Nouvel Indicateur
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des indicateurs...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadIndicateurs()">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Table -->
+  <mat-card *ngIf="!loading && !error">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="indicateurs" class="indicateurs-table">
+
+          <!-- Colonne Nom -->
+          <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef>Nom</th>
+            <td mat-cell *matCellDef="let indicateur">
+              <strong>{{ indicateur.nom }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Type -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let indicateur">
+              <mat-chip selected>{{ indicateur.type }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Objectif -->
+          <ng-container matColumnDef="objectif">
+            <th mat-header-cell *matHeaderCellDef>Objectif</th>
+            <td mat-cell *matCellDef="let indicateur">
+              {{ indicateur.objectif | slice:0:50 }}...
+            </td>
+          </ng-container>
+
+          <!-- Colonne Valeur Cible -->
+          <ng-container matColumnDef="valeurCible">
+            <th mat-header-cell *matHeaderCellDef>Cible</th>
+            <td mat-cell *matCellDef="let indicateur">
+              {{ indicateur.valeurCible }} {{ indicateur.unite }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Valeur Réelle -->
+          <ng-container matColumnDef="valeurReelle">
+            <th mat-header-cell *matHeaderCellDef>Réelle</th>
+            <td mat-cell *matCellDef="let indicateur">
+              {{ indicateur.valeurReelle || 'N/A' }} {{ indicateur.unite }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Projet -->
+          <ng-container matColumnDef="projet">
+            <th mat-header-cell *matHeaderCellDef>Projet</th>
+            <td mat-cell *matCellDef="let indicateur">
+              {{ indicateur.projet?.titre || 'Non assigné' }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let indicateur">
+              <div class="actions">
+                <button mat-icon-button matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Supprimer" color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="indicateurs.length === 0" class="no-data">
+          <p>Aucun indicateur trouvé</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

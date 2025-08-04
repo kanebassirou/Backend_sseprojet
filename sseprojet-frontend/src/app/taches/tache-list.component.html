@@ -1,0 +1,155 @@
+<div class="tache-list-container">
+  <div class="header">
+    <h1>Gestion des Tâches</h1>
+    <button mat-raised-button color="primary" routerLink="/taches/nouveau">
+      <mat-icon>add</mat-icon>
+      Nouvelle Tâche
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field>
+          <mat-label>Rechercher</mat-label>
+          <input matInput 
+                 [(ngModel)]="searchIntitule" 
+                 (ngModelChange)="onFilterChange()"
+                 placeholder="Intitulé de la tâche">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Statut</mat-label>
+          <mat-select [(ngModel)]="selectedStatut" (selectionChange)="onFilterChange()">
+            <mat-option *ngFor="let option of statutOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="checkbox-filter">
+          <label>
+            <input type="checkbox" [(ngModel)]="showOnlyRetard" (change)="onFilterChange()">
+            Tâches en retard uniquement
+          </label>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des tâches...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadTaches()">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Table -->
+  <mat-card *ngIf="!loading && !error">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredTaches" class="taches-table">
+
+          <!-- Colonne Intitulé -->
+          <ng-container matColumnDef="intitule">
+            <th mat-header-cell *matHeaderCellDef>Intitulé</th>
+            <td mat-cell *matCellDef="let tache">
+              <div class="tache-title">
+                <strong>{{ tache.intitule }}</strong>
+                <div class="tache-description" *ngIf="tache.description">
+                  {{ tache.description | slice:0:80 }}...
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Statut -->
+          <ng-container matColumnDef="statut">
+            <th mat-header-cell *matHeaderCellDef>Statut</th>
+            <td mat-cell *matCellDef="let tache">
+              <mat-select [value]="tache.statut" 
+                         (selectionChange)="updateStatut(tache, $event.value)"
+                         class="statut-select">
+                <mat-option value="A_FAIRE">À faire</mat-option>
+                <mat-option value="EN_COURS">En cours</mat-option>
+                <mat-option value="TERMINEE">Terminée</mat-option>
+                <mat-option value="EN_ATTENTE">En attente</mat-option>
+              </mat-select>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Date Début -->
+          <ng-container matColumnDef="dateDebut">
+            <th mat-header-cell *matHeaderCellDef>Date Début</th>
+            <td mat-cell *matCellDef="let tache">
+              {{ formatDate(tache.dateDebut) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Date Fin -->
+          <ng-container matColumnDef="dateFin">
+            <th mat-header-cell *matHeaderCellDef>Date Fin</th>
+            <td mat-cell *matCellDef="let tache">
+              {{ formatDate(tache.dateFin) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Projet -->
+          <ng-container matColumnDef="projet">
+            <th mat-header-cell *matHeaderCellDef>Projet</th>
+            <td mat-cell *matCellDef="let tache">
+              <span *ngIf="tache.projet">{{ tache.projet.titre }}</span>
+              <span *ngIf="!tache.projet" class="no-project">Non assigné</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Retard -->
+          <ng-container matColumnDef="retard">
+            <th mat-header-cell *matHeaderCellDef>Retard</th>
+            <td mat-cell *matCellDef="let tache">
+              <mat-chip *ngIf="tache.estEnRetard" color="warn" selected>
+                En retard
+              </mat-chip>
+              <span *ngIf="!tache.estEnRetard" class="on-time">À jour</span>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let tache">
+              <div class="actions">
+                <button mat-icon-button 
+                        matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button 
+                        (click)="deleteTache(tache.id!)"
+                        matTooltip="Supprimer"
+                        color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="filteredTaches.length === 0" class="no-data">
+          <p>Aucune tâche trouvée</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

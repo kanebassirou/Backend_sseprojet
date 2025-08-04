@@ -1,0 +1,98 @@
+<div class="rapport-list-container">
+  <div class="header">
+    <h1>Gestion des Rapports</h1>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Nouveau Rapport
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des rapports...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadRapports()">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Table -->
+  <mat-card *ngIf="!loading && !error">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="rapports" class="rapports-table">
+
+          <!-- Colonne Titre -->
+          <ng-container matColumnDef="titre">
+            <th mat-header-cell *matHeaderCellDef>Titre</th>
+            <td mat-cell *matCellDef="let rapport">
+              <strong>{{ rapport.titre }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Auteur -->
+          <ng-container matColumnDef="auteur">
+            <th mat-header-cell *matHeaderCellDef>Auteur</th>
+            <td mat-cell *matCellDef="let rapport">
+              {{ rapport.auteur }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Date -->
+          <ng-container matColumnDef="dateGeneration">
+            <th mat-header-cell *matHeaderCellDef>Date Génération</th>
+            <td mat-cell *matCellDef="let rapport">
+              {{ formatDate(rapport.dateGeneration) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Type -->
+          <ng-container matColumnDef="typeRapport">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let rapport">
+              <mat-chip selected>{{ rapport.typeRapport }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Projet -->
+          <ng-container matColumnDef="projet">
+            <th mat-header-cell *matHeaderCellDef>Projet</th>
+            <td mat-cell *matCellDef="let rapport">
+              {{ rapport.projetTitre }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let rapport">
+              <div class="actions">
+                <button mat-icon-button matTooltip="Voir">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Télécharger">
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="rapports.length === 0" class="no-data">
+          <p>Aucun rapport trouvé</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

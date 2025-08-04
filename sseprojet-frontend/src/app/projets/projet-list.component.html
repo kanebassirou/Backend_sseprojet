@@ -1,0 +1,162 @@
+<div class="projet-list-container">
+  <div class="header">
+    <h1>Gestion des Projets</h1>
+    <button mat-raised-button color="primary" routerLink="/projets/nouveau">
+      <mat-icon>add</mat-icon>
+      Nouveau Projet
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field>
+          <mat-label>Rechercher</mat-label>
+          <input matInput 
+                 [(ngModel)]="searchTitre" 
+                 (ngModelChange)="onFilterChange()"
+                 placeholder="Titre ou description">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Statut</mat-label>
+          <mat-select [(ngModel)]="selectedStatut" (selectionChange)="onFilterChange()">
+            <mat-option *ngFor="let option of statutOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des projets...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadProjets()">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Table -->
+  <mat-card *ngIf="!loading && !error">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredProjets" class="projets-table">
+
+          <!-- Colonne Titre -->
+          <ng-container matColumnDef="titre">
+            <th mat-header-cell *matHeaderCellDef>Titre</th>
+            <td mat-cell *matCellDef="let projet">
+              <div class="projet-title">
+                <strong>{{ projet.titre }}</strong>
+                <div class="projet-description">{{ projet.description | slice:0:100 }}...</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Statut -->
+          <ng-container matColumnDef="statut">
+            <th mat-header-cell *matHeaderCellDef>Statut</th>
+            <td mat-cell *matCellDef="let projet">
+              <mat-chip [color]="getStatutColor(projet.statut)" selected>
+                {{ getStatutLabel(projet.statut) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Chef de Projet -->
+          <ng-container matColumnDef="chefDeProjet">
+            <th mat-header-cell *matHeaderCellDef>Chef de Projet</th>
+            <td mat-cell *matCellDef="let projet">
+              <div class="chef-info">
+                <div>{{ projet.chefDeProjetNom }}</div>
+                <div class="email">{{ projet.chefDeProjetEmail }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Date Début -->
+          <ng-container matColumnDef="dateDebut">
+            <th mat-header-cell *matHeaderCellDef>Date Début</th>
+            <td mat-cell *matCellDef="let projet">
+              {{ formatDate(projet.dateDebut) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Date Fin -->
+          <ng-container matColumnDef="dateFin">
+            <th mat-header-cell *matHeaderCellDef>Date Fin</th>
+            <td mat-cell *matCellDef="let projet">
+              {{ formatDate(projet.dateFin) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Budget -->
+          <ng-container matColumnDef="budget">
+            <th mat-header-cell *matHeaderCellDef>Budget</th>
+            <td mat-cell *matCellDef="let projet">
+              {{ formatBudget(projet.budget) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Indicateurs -->
+          <ng-container matColumnDef="indicateurs">
+            <th mat-header-cell *matHeaderCellDef>Indicateurs</th>
+            <td mat-cell *matCellDef="let projet">
+              <mat-chip class="count-chip">{{ projet.nombreIndicateurs }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Tâches -->
+          <ng-container matColumnDef="taches">
+            <th mat-header-cell *matHeaderCellDef>Tâches</th>
+            <td mat-cell *matCellDef="let projet">
+              <mat-chip class="count-chip">{{ projet.nombreTaches }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let projet">
+              <div class="actions">
+                <button mat-icon-button 
+                        [routerLink]="['/projets', projet.id]"
+                        matTooltip="Voir détails">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button 
+                        [routerLink]="['/projets', projet.id, 'edit']"
+                        matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button 
+                        (click)="deleteProjet(projet.id!)"
+                        matTooltip="Supprimer"
+                        color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="filteredProjets.length === 0" class="no-data">
+          <p>Aucun projet trouvé</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,92 @@
+<div class="user-list-container">
+  <div class="header">
+    <h1>Gestion des Utilisateurs</h1>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Nouvel Utilisateur
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Chargement des utilisateurs...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadUsers()">
+      <mat-icon>refresh</mat-icon>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Table -->
+  <mat-card *ngIf="!loading && !error">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="users" class="users-table">
+
+          <!-- Colonne Nom -->
+          <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef>Nom</th>
+            <td mat-cell *matCellDef="let user">
+              <strong>{{ user.nom }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let user">
+              {{ user.email }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Type -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip [color]="getTypeColor(user.type)" selected>
+                {{ getTypeLabel(user.type) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Date Création -->
+          <ng-container matColumnDef="dateCreation">
+            <th mat-header-cell *matHeaderCellDef>Date Création</th>
+            <td mat-cell *matCellDef="let user">
+              {{ formatDate(user.dateCreation) }}
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="actions">
+                <button mat-icon-button matTooltip="Modifier">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button 
+                        (click)="deleteUser(user.id!)"
+                        matTooltip="Supprimer"
+                        color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="users.length === 0" class="no-data">
+          <p>Aucun utilisateur trouvé</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

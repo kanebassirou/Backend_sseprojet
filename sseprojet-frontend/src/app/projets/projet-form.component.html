@@ -1,0 +1,122 @@
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        {{ isEditMode ? 'Modifier le Projet' : 'Nouveau Projet' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="projetForm" (ngSubmit)="onSubmit()">
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Titre du projet</mat-label>
+            <input matInput formControlName="titre" placeholder="Titre du projet">
+            <mat-error *ngIf="titleControl?.hasError('required')">
+              Le titre est requis
+            </mat-error>
+            <mat-error *ngIf="titleControl?.hasError('minlength')">
+              Le titre doit contenir au moins 3 caractères
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" 
+                     placeholder="Description détaillée du projet"
+                     rows="4"></textarea>
+            <mat-error *ngIf="descriptionControl?.hasError('required')">
+              La description est requise
+            </mat-error>
+            <mat-error *ngIf="descriptionControl?.hasError('minlength')">
+              La description doit contenir au moins 10 caractères
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row two-columns">
+          <mat-form-field appearance="outline">
+            <mat-label>Date de début</mat-label>
+            <input matInput [matDatepicker]="dateDebutPicker" 
+                   formControlName="dateDebut">
+            <mat-datepicker-toggle matIconSuffix [for]="dateDebutPicker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #dateDebutPicker></mat-datepicker>
+            <mat-error *ngIf="dateDebutControl?.hasError('required')">
+              La date de début est requise
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date de fin</mat-label>
+            <input matInput [matDatepicker]="dateFinPicker" 
+                   formControlName="dateFin">
+            <mat-datepicker-toggle matIconSuffix [for]="dateFinPicker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #dateFinPicker></mat-datepicker>
+            <mat-error *ngIf="dateFinControl?.hasError('required')">
+              La date de fin est requise
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row two-columns">
+          <mat-form-field appearance="outline">
+            <mat-label>Budget (€)</mat-label>
+            <input matInput type="number" formControlName="budget" 
+                   placeholder="0">
+            <span matTextPrefix>€&nbsp;</span>
+            <mat-error *ngIf="budgetControl?.hasError('required')">
+              Le budget est requis
+            </mat-error>
+            <mat-error *ngIf="budgetControl?.hasError('min')">
+              Le budget doit être positif
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="statut">
+              <mat-option *ngFor="let statut of statutOptions" 
+                         [value]="statut.value">
+                {{ statut.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Chef de projet</mat-label>
+            <mat-select formControlName="chefDeProjetId">
+              <mat-option *ngFor="let chef of chefsDeProjet" 
+                         [value]="chef.id">
+                {{ chef.nom }} ({{ chef.email }})
+              </mat-option>
+            </mat-select>
+            <mat-error>Le chef de projet est requis</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="error" class="error-message">
+          {{ error }}
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="onCancel()">
+            Annuler
+          </button>
+          <button mat-raised-button color="primary" 
+                  type="submit" 
+                  [disabled]="projetForm.invalid || loading">
+            {{ loading ? 'Sauvegarde...' : (isEditMode ? 'Modifier' : 'Créer') }}
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
