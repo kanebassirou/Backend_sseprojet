@@ -203,7 +203,7 @@ List<Tache> findTachesEnRetard(@Param("dateActuelle") LocalDate dateActuelle);
 
 ### **📋 Prérequis**
 - ☕ **Java 21** (LTS recommandé)
-- 🐘 **PostgreSQL 15+**
+- 🐘 **PostgreSQL 17+**
 - 📦 **Maven 3.8+**
 - 🔧 **IDE** : IntelliJ IDEA / VS Code / Eclipse
 
@@ -324,7 +324,6 @@ POST /api/evaluateurs
 ### **🔧 Outils de Test**
 ```bash
 # Collection Postman disponible
-# Tests unitaires avec JUnit 5
 # Tests d'intégration Spring Boot
 ```
 
@@ -338,7 +337,7 @@ POST /api/evaluateurs
 
 ### **🎯 Prochaines Fonctionnalités**
 - [ ] 🔐 **Authentification JWT** + Spring Security
-- [ ] 📱 **Interface Web** (React/Vue.js)
+- [ ] 📱 **Interface Web** (React/Angular)
 - [ ] 📊 **Dashboard** temps réel
 - [ ] 🔔 **Notifications** automatiques
 - [ ] 📤 **Export PDF/Excel** des rapports
