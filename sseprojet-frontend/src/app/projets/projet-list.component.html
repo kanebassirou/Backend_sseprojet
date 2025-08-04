@@ -13,8 +13,8 @@
       <div class="filters">
         <mat-form-field>
           <mat-label>Rechercher</mat-label>
-          <input matInput 
-                 [(ngModel)]="searchTitre" 
+          <input matInput
+                 [(ngModel)]="searchTitre"
                  (ngModelChange)="onFilterChange()"
                  placeholder="Titre ou description">
           <mat-icon matSuffix>search</mat-icon>
@@ -78,8 +78,8 @@
             <th mat-header-cell *matHeaderCellDef>Chef de Projet</th>
             <td mat-cell *matCellDef="let projet">
               <div class="chef-info">
-                <div>{{ projet.chefDeProjetNom }}</div>
-                <div class="email">{{ projet.chefDeProjetEmail }}</div>
+                <div>{{ projet.chefDeProjet?.nom }}</div>
+                <div class="email">{{ projet.chefDeProjet?.email }}</div>
               </div>
             </td>
           </ng-container>
@@ -129,17 +129,17 @@
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td mat-cell *matCellDef="let projet">
               <div class="actions">
-                <button mat-icon-button 
+                <button mat-icon-button
                         [routerLink]="['/projets', projet.id]"
                         matTooltip="Voir détails">
                   <mat-icon>visibility</mat-icon>
                 </button>
-                <button mat-icon-button 
+                <button mat-icon-button
                         [routerLink]="['/projets', projet.id, 'edit']"
                         matTooltip="Modifier">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button 
+                <button mat-icon-button
                         (click)="deleteProjet(projet.id!)"
                         matTooltip="Supprimer"
                         color="warn">

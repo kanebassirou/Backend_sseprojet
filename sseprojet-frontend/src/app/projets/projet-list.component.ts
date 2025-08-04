@@ -43,12 +43,12 @@ export class ProjetListComponent implements OnInit {
   searchTitre = '';
 
   displayedColumns: string[] = [
-    'titre', 
-    'statut', 
-    'chefDeProjet', 
-    'dateDebut', 
-    'dateFin', 
-    'budget', 
+    'titre',
+    'statut',
+    'chefDeProjet',
+    'dateDebut',
+    'dateFin',
+    'budget',
     'indicateurs',
     'taches',
     'actions'
@@ -89,10 +89,10 @@ export class ProjetListComponent implements OnInit {
   applyFilters(): void {
     this.filteredProjets = this.projets.filter(projet => {
       const matchStatut = this.selectedStatut === 'TOUS' || projet.statut === this.selectedStatut;
-      const matchTitre = !this.searchTitre || 
+      const matchTitre = !this.searchTitre ||
         projet.titre.toLowerCase().includes(this.searchTitre.toLowerCase()) ||
         projet.description.toLowerCase().includes(this.searchTitre.toLowerCase());
-      
+
       return matchStatut && matchTitre;
     });
   }

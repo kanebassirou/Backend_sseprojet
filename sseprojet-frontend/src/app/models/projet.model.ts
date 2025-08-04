@@ -7,7 +7,7 @@ export interface Projet {
   budget: number;
   statut: StatutProjet;
   chefDeProjetId: number;
-  chefDeProjet?: any;
+  chefDeProjet?: ChefDeProjet;
   indicateurs?: Indicateur[];
   taches?: Tache[];
   rapports?: Rapport[];
@@ -26,6 +26,13 @@ export interface CreateProjetRequest {
   chefDeProjetId: number;
 }
 
+export interface ChefDeProjet {
+  id: number;
+  nom: string;
+  email: string;
+  role: string;
+}
+
 export interface ProjetResponse {
   id: number;
   titre: string;
@@ -34,11 +41,10 @@ export interface ProjetResponse {
   dateFin: string;
   budget: number;
   statut: StatutProjet;
-  chefDeProjetNom: string;
-  chefDeProjetEmail: string;
-  nombreIndicateurs: number;
-  nombreTaches: number;
-  nombreRapports: number;
+  chefDeProjet: ChefDeProjet;
+  nombreIndicateurs?: number;
+  nombreTaches?: number;
+  nombreRapports?: number;
 }
 
 // Imports pour éviter les erreurs
