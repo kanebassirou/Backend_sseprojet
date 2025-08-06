@@ -4,9 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-safe": "ng serve --port 4200 --poll 2000",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "clean": "rmdir /s /q .angular\\cache 2>nul || true"
   },
   "private": true,
   "dependencies": {

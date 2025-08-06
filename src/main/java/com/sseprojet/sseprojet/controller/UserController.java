@@ -1,6 +1,7 @@
 package com.sseprojet.sseprojet.controller;
 
 import com.sseprojet.sseprojet.dto.CreateUserRequest;
+import com.sseprojet.sseprojet.dto.UserResponse;
 import com.sseprojet.sseprojet.factory.UserFactory;
 import com.sseprojet.sseprojet.model.User;
 import com.sseprojet.sseprojet.service.UserService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Contrôleur REST pour la gestion des utilisateurs
@@ -40,12 +42,15 @@ public class UserController {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Liste des utilisateurs récupérée avec succès",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        List<UserResponse> userResponses = users.stream()
+                .map(UserResponse::fromUser)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userResponses);
     }
     
     @Operation(
@@ -54,15 +59,15 @@ public class UserController {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Utilisateur trouvé",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
         @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<UserResponse> getUserById(
             @Parameter(description = "ID de l'utilisateur à récupérer", example = "1")
             @PathVariable Integer id) {
         Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok)
+        return user.map(u -> ResponseEntity.ok(UserResponse.fromUser(u)))
                   .orElse(ResponseEntity.notFound().build());
     }
     

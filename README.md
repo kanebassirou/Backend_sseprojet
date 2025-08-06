@@ -1,87 +1,160 @@
-# Système de Suivi et d'Évaluation de Projets (SSE)
+# 🚀 Système de Suivi et d'Évaluation de Projets (SSE) - Backend
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
 [![Maven](https://img.shields.io/badge/Maven-3.8+-red.svg)](https://maven.apache.org/)
+[![JWT](https://img.shields.io/badge/JWT-Authentication-green.svg)](https://jwt.io/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203-brightgreen.svg)](https://swagger.io/)
 
 ## 📖 Description
 
-Le **Système de Suivi et d'Évaluation de Projets (SSE)** est une API REST complète développée avec Spring Boot qui permet de gérer le cycle de vie complet des projets : de leur création à leur évaluation, en passant par le suivi des indicateurs de performance, la gestion des tâches et la génération de rapports.
+Le **Système de Suivi et d'Évaluation de Projets (SSE)** est une API REST sécurisée et complète développée avec Spring Boot 3.5.4. Cette solution robuste permet de gérer le cycle de vie complet des projets avec authentification JWT, validation avancée des données, et documentation API interactive.
+
+### ✨ Fonctionnalités Principales
+- 🔐 **Authentification JWT** avec gestion des rôles
+- 👥 **Gestion complète des utilisateurs** (CRUD + types spécialisés)
+- 📊 **Suivi de projets** avec indicateurs de performance
+- 📝 **Gestion des tâches** et suivi d'avancement
+- 📈 **Évaluations** et génération de rapports
+- 🛡️ **Validation robuste** des données d'entrée
+- 📚 **Documentation automatique** avec Swagger UI
 
 ## 🏗️ Architecture Technique
 
 ### **Stack Technologique**
-- **Backend** : Spring Boot 3.3.5
-- **Java** : Version 21 (LTS)
+- **Backend** : Spring Boot 3.5.4 + Spring Security
+- **Java** : Version 21+ (LTS)
 - **Base de données** : PostgreSQL 15+
-- **ORM** : JPA/Hibernate 6
-- **Documentation API** : Swagger/OpenAPI 3
-- **Validation** : Bean Validation (Jakarta)
-- **Sérialisation** : Jackson avec modules spécialisés
+- **ORM** : JPA/Hibernate 6 + Configuration avancée
+- **Authentification** : JWT (jjwt 0.12.6) + Spring Security 6
+- **Documentation API** : Swagger/OpenAPI 3 + Swagger UI
+- **Validation** : Bean Validation (Jakarta) + Annotations personnalisées
+- **Sérialisation** : Jackson + Modules Hibernate + JavaTime
 - **Build Tool** : Maven 3.8+
-- **Tests API** : Compatible Postman/Insomnia
+- **Tests API** : Compatible Postman/Insomnia/cURL
 
-### **Architecture en Couches**
+### **Architecture en Couches Sécurisée**
 ```
 ┌─────────────────────────────────────┐
+│        🔐 JWT Security Layer        │  ← Authentification + Autorisation
+├─────────────────────────────────────┤
 │           Controllers               │  ← 6 API REST + Documentation Swagger
 ├─────────────────────────────────────┤
-│              DTOs                   │  ← Transfert + Validation + Anti-Cycle
+│        DTOs + Validation            │  ← Transfert + Validation + Anti-Cycle
 ├─────────────────────────────────────┤
-│             Services                │  ← Logique métier + Transactions
+│        Services + Factory           │  ← Logique métier + Factory Pattern
 ├─────────────────────────────────────┤
 │          Repositories               │  ← 47+ méthodes JPA + Requêtes personnalisées
 ├─────────────────────────────────────┤
-│             Models                  │  ← 10 Entités JPA + Héritage + Relations
+│     Models + Inheritance            │  ← 10 Entités JPA + Héritage + Relations
 ├─────────────────────────────────────┤
-│          Configuration              │  ← Jackson + CORS + Swagger
+│          Configuration              │  ← Jackson + CORS + Security + Swagger
 ├─────────────────────────────────────┤
 │           PostgreSQL                │  ← Base de données relationnelle
 └─────────────────────────────────────┘
 ```
 
-## 🎯 API REST Complète - 47+ Endpoints
+## 🔐 Authentification et Sécurité
+
+### **JWT Authentication**
+- **Endpoint de connexion** : `POST /api/auth/login`
+- **Inscription** : `POST /api/auth/register`
+- **Token JWT** : Validité configurable + Refresh
+- **Protection des routes** : Middleware Spring Security
+- **Gestion des rôles** : ADMINISTRATEUR, CHEF_PROJET, DECIDEUR, EVALUATEUR
+
+### **Exemple d'authentification**
+```json
+// POST /api/auth/login
+{
+  "email": "admin@exemple.com",
+  "motDePasse": "admin123"
+}
+
+// Réponse
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "type": "Bearer",
+  "email": "admin@exemple.com",
+  "nom": "Administrateur",
+  "role": "ADMINISTRATEUR"
+}
+```
+
+## 🎯 API REST Complète - 50+ Endpoints
 
 ### **🔥 Contrôleurs Implémentés**
 
-| Contrôleur | Endpoints | Fonctionnalités |
-|------------|-----------|-----------------|
-| **UserController** | 6 | Gestion utilisateurs + types |
-| **ProjetController** | 8 | CRUD projets + filtres avancés |
-| **IndicateurController** | 7 | KPIs + métriques + recherche |
-| **EvaluateurController** | 10 | Évaluateurs + assignation projets |
-| **RapportController** | 12 | Rapports + génération auto |
-| **TacheController** | 14 | Tâches + statuts + retards |
+| Contrôleur | Endpoints | Fonctionnalités | Sécurité |
+|------------|-----------|-----------------|----------|
+| **🔐 AuthController** | 6 | Authentification JWT + Gestion utilisateurs | Public/Protégé |
+| **👥 UserController** | 6 | CRUD utilisateurs + Types spécialisés | JWT Required |
+| **📊 ProjetController** | 10 | Gestion projets + Statuts + Recherche | Role-based |
+| **📈 IndicateurController** | 8 | KPIs + Métriques + Suivi performance | Role-based |
+| **📝 TacheController** | 8 | Gestion tâches + Affectation + Suivi | Role-based |
+| **📋 EvaluationController** | 6 | Évaluations + Notes + Rapports | Role-based |
 
-### **📊 Statistiques de l'API**
-- **Total endpoints** : 47+
-- **Méthodes HTTP** : GET, POST, PUT, PATCH, DELETE
-- **Formats supportés** : JSON
-- **Documentation** : Swagger UI intégrée
-- **Validation** : Complète avec messages d'erreur explicites
-
-## 🚀 Fonctionnalités Détaillées
-
-### **👥 Gestion des Utilisateurs & Évaluateurs**
-```bash
-# API Users (Héritage JPA)
-GET    /api/users                     # Liste tous les utilisateurs
-POST   /api/users                     # Créer un utilisateur
-GET    /api/users/{id}                # Détails utilisateur
-PUT    /api/users/{id}                # Modifier utilisateur
-DELETE /api/users/{id}                # Supprimer utilisateur
-
-# API Évaluateurs (Spécialisée)
-GET    /api/evaluateurs               # Liste évaluateurs
-POST   /api/evaluateurs               # Créer évaluateur (avec DTO)
-GET    /api/evaluateurs/email/{email} # Recherche par email
-GET    /api/evaluateurs/recherche?nom=... # Recherche par nom
-POST   /api/evaluateurs/{id}/assigner-projet/{projetId} # Assigner projet
-DELETE /api/evaluateurs/{id}/retirer-projet # Retirer du projet
+### **🔐 Endpoints d'Authentification** (`/api/auth`)
+```http
+POST   /api/auth/login           # Connexion utilisateur
+POST   /api/auth/register        # Inscription nouvel utilisateur  
+GET    /api/auth/list-users      # Liste tous les utilisateurs (Admin)
+POST   /api/auth/init-admin      # Création admin par défaut
+POST   /api/auth/test-login      # Test de connexion
+GET    /api/auth/test-jwt        # Validation token JWT
 ```
 
-**Types d'utilisateurs supportés :**
+### **👥 Endpoints Utilisateurs** (`/api/users`) - 🔒 JWT Required
+```http
+GET    /api/users               # Liste utilisateurs (sans mot de passe)
+GET    /api/users/{id}          # Détails utilisateur par ID
+GET    /api/users/email/{email} # Recherche par email
+POST   /api/users               # Créer utilisateur
+PUT    /api/users/{id}          # Modifier utilisateur
+DELETE /api/users/{id}          # Supprimer utilisateur
+### **📊 Endpoints Projets** (`/api/projets`) - 🔒 JWT Required
+```http
+GET    /api/projets              # Liste tous les projets
+POST   /api/projets              # Créer nouveau projet
+GET    /api/projets/{id}         # Détails projet par ID
+PUT    /api/projets/{id}         # Modifier projet
+DELETE /api/projets/{id}         # Supprimer projet
+GET    /api/projets/statut/{statut} # Filtrer par statut
+GET    /api/projets/search?nom=...  # Recherche par nom
+PATCH  /api/projets/{id}/statut     # Changer statut projet
+GET    /api/projets/{id}/taches     # Tâches du projet
+GET    /api/projets/{id}/indicateurs # Indicateurs du projet
+```
+
+### **� Endpoints Indicateurs** (`/api/indicateurs`) - 🔒 JWT Required
+```http
+GET    /api/indicateurs          # Liste tous les indicateurs
+POST   /api/indicateurs          # Créer indicateur
+GET    /api/indicateurs/{id}     # Détails indicateur
+PUT    /api/indicateurs/{id}     # Modifier indicateur
+DELETE /api/indicateurs/{id}     # Supprimer indicateur
+GET    /api/indicateurs/projet/{id} # Indicateurs par projet
+GET    /api/indicateurs/type/{type} # Filtrer par type
+PATCH  /api/indicateurs/{id}/valeur # Mettre à jour valeur
+```
+
+## 🛡️ Modèle de Données Sécurisé
+
+### **🔐 Entités Principales**
+- **User** (Abstract) → Administrateur, ChefDeProjet, Decideur, Evaluateur
+- **Projet** → Gestion complète du cycle de vie
+- **Indicateur** → KPIs et métriques de performance
+- **Tache** → Suivi détaillé des activités
+- **Evaluation** → Système de notation et feedback
+- **Rapport** → Génération automatique de rapports
+
+### **📊 DTOs et Validation**
+- **RegisterRequest** → Inscription sécurisée avec validation
+- **LoginRequest** → Authentification robuste
+- **JwtResponse** → Réponse standardisée avec token
+- **UserResponse** → Données utilisateur sans mot de passe
+- **CreateUserRequest** → Création utilisateur avec Factory Pattern
 - 👑 **Administrateur** : Gestion complète du système
 - 👨‍💼 **Chef de Projet** : Gestion des projets assignés  
 - 🎯 **Décideur** : Consultation et validation
@@ -115,72 +188,294 @@ PUT    /api/indicateurs/{id}          # Modifier indicateur
 DELETE /api/indicateurs/{id}          # Supprimer indicateur
 ```
 
-**Types d'indicateurs :**
-- 📈 **QUANTITATIF** : Mesures numériques
-- 📝 **QUALITATIF** : Évaluations descriptives
+## 🚀 Démarrage Rapide
 
-### **✅ Gestion des Tâches (Complet)**
+### **📋 Prérequis**
+- ☕ **Java 21+** (OpenJDK recommandé)
+- � **PostgreSQL 15+** (running on port 5432)
+- 📦 **Maven 3.8+**
+- 🧪 **Postman** ou autre client REST (optionnel)
+
+### **⚡ Installation et Démarrage**
 ```bash
-# CRUD Tâches
-GET    /api/taches                    # Toutes les tâches
-POST   /api/taches                    # Créer tâche
-PUT    /api/taches/{id}               # Modifier tâche
-PATCH  /api/taches/{id}/statut?statut=EN_COURS # Changer statut uniquement
-DELETE /api/taches/{id}               # Supprimer tâche
+# 1. Cloner le projet
+git clone https://github.com/kanebassirou/Backend_sseprojet.git
+cd Backend_sseprojet
 
-# Filtres avancés
-GET    /api/taches/projet/{id}        # Tâches d'un projet
-GET    /api/taches/statut/{statut}    # Par statut
-GET    /api/taches/projet/{id}/statut/{statut} # Projet + statut
-GET    /api/taches/recherche?intitule=... # Recherche textuelle
-GET    /api/taches/en-retard          # Tâches en retard (auto-calculé)
-GET    /api/taches/projet/{id}/en-retard # Retards par projet
+# 2. Configuration PostgreSQL (application.properties)
+spring.datasource.url=jdbc:postgresql://localhost:5432/sseprojet_db
+spring.datasource.username=votre_user
+spring.datasource.password=votre_password
 
-# Statistiques
-GET    /api/taches/stats/projet/{id}  # Stats par statut
-GET    /api/taches/count              # Compteur global
-GET    /api/taches/count/projet/{id}  # Compteur par projet
+# 3. Compiler et démarrer
+mvn clean compile
+mvn spring-boot:run
+
+# 4. L'API sera disponible sur : http://localhost:8080
+# 5. Documentation Swagger : http://localhost:8080/swagger-ui.html
 ```
 
-**Statuts de tâches :**
-- 📋 `A_FAIRE` (défaut)
-- 🔄 `EN_COURS`
-- ✅ `TERMINEE`
-- ⏸️ `EN_ATTENTE`
-
-### **📄 Gestion des Rapports**
+### **🔐 Premier Test - Authentification**
 ```bash
-# CRUD Rapports
-GET    /api/rapports                  # Tous les rapports
-POST   /api/rapports                  # Créer rapport
-PUT    /api/rapports/{id}             # Modifier rapport
-DELETE /api/rapports/{id}             # Supprimer rapport
+# 1. Créer un admin par défaut
+curl -X POST http://localhost:8080/api/auth/init-admin
 
-# Recherche et filtrage
-GET    /api/rapports/projet/{id}      # Rapports d'un projet
-GET    /api/rapports/auteur/{auteur}  # Par auteur
-GET    /api/rapports/recherche?titre=... # Recherche par titre
-GET    /api/rapports/periode?dateDebut=...&dateFin=... # Par période
-GET    /api/rapports/projet/{id}/auteur/{auteur} # Croisé
+# 2. Se connecter
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@sseprojet.com",
+    "motDePasse": "admin123"
+  }'
 
-# Fonctionnalités avancées
-POST   /api/rapports/generer-auto/{projetId} # Génération automatique
-GET    /api/rapports/count/projet/{id} # Statistiques
+# 3. Utiliser le token JWT retourné pour les autres requêtes
+# Header: Authorization: Bearer your_jwt_token_here
+```
+
+## 📋 Guide Postman - Tests Complets
+
+### **🔐 Collection d'Authentification**
+
+#### **1. Connexion Admin**
+```http
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@sseprojet.com",
+  "motDePasse": "admin123"
+}
+```
+
+#### **2. Inscription Nouvel Utilisateur**
+```http
+POST http://localhost:8080/api/auth/register  
+Content-Type: application/json
+
+{
+  "nom": "Jean Dupont",
+  "email": "jean.dupont@exemple.com",
+  "motDePasse": "password123",
+  "typeUtilisateur": "CHEF_PROJET"
+}
+```
+
+#### **3. Lister les Utilisateurs (Admin)**
+```http
+GET http://localhost:8080/api/auth/list-users
+Authorization: Bearer your_jwt_token_here
+```
+
+### **� Collection Utilisateurs Sécurisée**
+
+#### **4. Liste Utilisateurs (Format DTO)**
+```http
+GET http://localhost:8080/api/users
+Authorization: Bearer your_jwt_token_here
+```
+
+#### **5. Créer Utilisateur Spécialisé**
+```http
+POST http://localhost:8080/api/users
+Authorization: Bearer your_jwt_token_here
+Content-Type: application/json
+
+{
+  "nom": "Marie Martin",
+  "email": "marie.martin@exemple.com",
+  "motDePasse": "secure123",
+  "typeUtilisateur": "EVALUATEUR"
+}
+```
+
+### **📊 Collection Projets**
+
+#### **6. Créer un Projet**
+```http
+POST http://localhost:8080/api/projets
+Authorization: Bearer your_jwt_token_here
+Content-Type: application/json
+
+{
+  "nom": "Projet SSE V2",
+  "description": "Amélioration du système SSE",
+  "dateDebut": "2025-01-01",
+  "dateFin": "2025-12-31",
+  "budget": 150000.00,
+  "chefDeProjet": {
+    "id": 2
+  }
+}
+```
+
+#### **7. Lister les Projets**
+```http
+GET http://localhost:8080/api/projets
+Authorization: Bearer your_jwt_token_here
+```
+
+### **📈 Collection Indicateurs**
+
+#### **8. Créer un Indicateur**
+```http
+POST http://localhost:8080/api/indicateurs
+Authorization: Bearer your_jwt_token_here
+Content-Type: application/json
+
+{
+  "nom": "Taux d'avancement",
+  "description": "Pourcentage de tâches terminées",
+  "typeIndicateur": "QUANTITATIF",
+  "valeurCible": 100.0,
+  "valeurActuelle": 0.0,
+  "unite": "%",
+  "projet": {
+    "id": 1
+  }
+}
 ```
 
 ## 🛠️ Configuration Technique Avancée
 
-### **🔧 Gestion Jackson (Anti-références circulaires)**
+### **🔧 Security Configuration**
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated())
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+}
+```
+
+### **🔧 Jackson Configuration Anti-Cyclique**
 ```java
 @Configuration
 public class JacksonConfig {
     @Bean
     public Hibernate6Module hibernate6Module() {
-        return new Hibernate6Module();
+        Hibernate6Module module = new Hibernate6Module();
+        module.configure(Hibernate6Module.Feature.FORCE_LAZY_LOADING, false);
+        return module;
     }
     
-    @Bean
+    @Bean 
     public JavaTimeModule javaTimeModule() {
+        return new JavaTimeModule();
+    }
+}
+```
+
+### **🗄️ Structure Base de Données**
+```sql
+-- Tables principales avec héritage
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    dtype VARCHAR(31) NOT NULL,  -- Discriminator pour héritage
+    nom VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    mot_de_passe_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE projets (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(200) NOT NULL,
+    description TEXT,
+    date_debut DATE,
+    date_fin DATE,
+    statut VARCHAR(50) DEFAULT 'EN_COURS',
+    budget DECIMAL(15,2),
+    chef_de_projet_id INTEGER REFERENCES users(id)
+);
+
+-- + Tables: indicateurs, taches, evaluations, rapports
+```
+
+## 📊 Statistiques du Projet
+
+### **📈 Métriques Techniques**
+- **📁 Fichiers Java** : 53+ classes
+- **🔗 Endpoints API** : 50+ routes REST
+- **🗄️ Entités JPA** : 10 entités avec relations
+- **📋 DTOs** : 15+ DTOs avec validation
+- **🧪 Tests** : Compatibilité Postman/Swagger
+- **📚 Documentation** : Swagger UI intégrée
+
+### **🛡️ Sécurité et Robustesse**
+- ✅ **Authentification JWT** complète
+- ✅ **Validation des données** avec Bean Validation
+- ✅ **Gestion d'erreurs** standardisée
+- ✅ **CORS** configuré pour le frontend
+- ✅ **Anti-références circulaires** Jackson
+- ✅ **Sérialisation** optimisée Hibernate
+
+## 🚀 Déploiement et Production
+
+### **🐳 Docker (Recommandé)**
+```dockerfile
+FROM openjdk:21-jdk-slim
+COPY target/sseprojet-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+```
+
+### **☁️ Variables d'Environnement**
+```bash
+# Base de données
+DB_URL=jdbc:postgresql://localhost:5432/sseprojet_db
+DB_USERNAME=sseprojet_user
+DB_PASSWORD=secure_password
+
+# JWT Configuration
+JWT_SECRET=votre_jwt_secret_key_super_secure_256_bits
+JWT_EXPIRATION=86400000
+
+# Profil Spring
+SPRING_PROFILES_ACTIVE=prod
+```
+
+## 👥 Contribution et Support
+
+### **🤝 Comment Contribuer**
+1. 🍴 Fork le projet
+2. 🌿 Créer une branche feature (`git checkout -b feature/nouvelle-fonctionnalite`)
+3. 💾 Commit les changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
+4. 📤 Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
+5. 🔄 Ouvrir une Pull Request
+
+### **📞 Support et Contact**
+- 🐛 **Issues** : [GitHub Issues](https://github.com/kanebassirou/Backend_sseprojet/issues)
+- 📧 **Email** : votre.email@exemple.com
+- 💬 **Discussion** : GitHub Discussions
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+---
+
+### 🎯 **Prêt pour la Production !**
+
+Ce backend Spring Boot est **production-ready** avec :
+- 🔐 **Sécurité JWT** complète
+- 📚 **Documentation Swagger** interactive
+- 🧪 **Tests API** complets avec Postman
+- 🛡️ **Validation robuste** des données
+- 📊 **50+ endpoints** fonctionnels
+- 🗄️ **Base de données** optimisée PostgreSQL
+
+**🚀 Commencez maintenant :** `mvn spring-boot:run` et accédez à http://localhost:8080/swagger-ui.html
         return new JavaTimeModule();
     }
 }

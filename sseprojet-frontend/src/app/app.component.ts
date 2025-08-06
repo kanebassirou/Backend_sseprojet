@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
-import { NavigationComponent } from './shared/navigation.component';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NavigationComponent],
-  template: '<app-navigation></app-navigation>',
-  styleUrls: ['./app.component.css']
+  imports: [CommonModule, RouterOutlet],
+  templateUrl: './app.component.html',
+  styles: [`
+    /* Plus besoin de auth-container */
+  `]
 })
 export class AppComponent {
   title = 'sseprojet-frontend';
 }
+

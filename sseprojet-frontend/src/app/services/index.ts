@@ -1,4 +1,5 @@
 // Index file pour exporter tous les services
+export * from './auth.service';
 export * from './user.service';
 export * from './evaluateur.service';
 export * from './projet.service';

@@ -1,0 +1,126 @@
+<div class="sign-up-container">
+  <div class="sign-up-card">
+    <div class="header">
+      <h1>📝 Créer un compte</h1>
+      <p>Rejoignez la plateforme SSE</p>
+    </div>
+
+    <!-- Formulaire d'inscription -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Messages -->
+      <div *ngIf="error" class="alert error">{{ error }}</div>
+      <div *ngIf="success" class="alert success">{{ success }}</div>
+
+      <!-- Nom complet -->
+      <div class="form-group">
+        <label for="nom">Nom complet *</label>
+        <input
+          id="nom"
+          type="text"
+          formControlName="nom"
+          placeholder="Votre nom complet"
+          [class.error]="nomControl?.invalid && nomControl?.touched">
+        <div *ngIf="nomControl?.invalid && nomControl?.touched" class="field-error">
+          <span *ngIf="nomControl?.errors?.['required']">Le nom est requis</span>
+          <span *ngIf="nomControl?.errors?.['minlength']">Minimum 2 caractères</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="votre.email@exemple.com"
+          [class.error]="emailControl?.invalid && emailControl?.touched">
+        <div *ngIf="emailControl?.invalid && emailControl?.touched" class="field-error">
+          <span *ngIf="emailControl?.errors?.['required']">L'email est requis</span>
+          <span *ngIf="emailControl?.errors?.['email']">Format d'email invalide</span>
+        </div>
+      </div>
+
+      <!-- Type d'utilisateur -->
+      <div class="form-group">
+        <label for="type">Rôle *</label>
+        <select
+          id="type"
+          formControlName="type"
+          [class.error]="typeControl?.invalid && typeControl?.touched">
+          <option value="">Sélectionnez votre rôle</option>
+          <option *ngFor="let userType of userTypes" [value]="userType.value">
+            {{ userType.label }}
+          </option>
+        </select>
+        <div *ngIf="typeControl?.invalid && typeControl?.touched" class="field-error">
+          <span *ngIf="typeControl?.errors?.['required']">Le rôle est requis</span>
+        </div>
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="form-group">
+        <label for="password">Mot de passe *</label>
+        <div class="password-input">
+          <input
+            id="password"
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="••••••••"
+            [class.error]="passwordControl?.invalid && passwordControl?.touched">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()">
+            {{ isPasswordVisible ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div *ngIf="passwordControl?.invalid && passwordControl?.touched" class="field-error">
+          <span *ngIf="passwordControl?.errors?.['required']">Le mot de passe est requis</span>
+          <span *ngIf="passwordControl?.errors?.['minlength']">Minimum 6 caractères</span>
+        </div>
+      </div>
+
+      <!-- Confirmation mot de passe -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe *</label>
+        <div class="password-input">
+          <input
+            id="confirmPassword"
+            [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="••••••••"
+            [class.error]="confirmPasswordControl?.invalid && confirmPasswordControl?.touched || registerForm.errors?.['passwordMismatch'] && confirmPasswordControl?.touched">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()">
+            {{ isConfirmPasswordVisible ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div *ngIf="confirmPasswordControl?.invalid && confirmPasswordControl?.touched" class="field-error">
+          <span *ngIf="confirmPasswordControl?.errors?.['required']">La confirmation est requise</span>
+        </div>
+        <div *ngIf="registerForm.errors?.['passwordMismatch'] && confirmPasswordControl?.touched" class="field-error">
+          <span>Les mots de passe ne correspondent pas</span>
+        </div>
+      </div>
+
+      <!-- Bouton d'inscription -->
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid || loading"
+        class="register-button">
+        <span *ngIf="!loading">✨ Créer mon compte</span>
+        <span *ngIf="loading">⏳ Création en cours...</span>
+      </button>
+    </form>
+
+    <!-- Lien vers la connexion -->
+    <div class="login-link">
+      <p>Déjà un compte ?
+        <a routerLink="/authentication/sign-in">Se connecter</a>
+      </p>
+    </div>
+  </div>
+</div>

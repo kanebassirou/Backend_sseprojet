@@ -1,0 +1,62 @@
+<div class="sign-in-container">
+  <div class="sign-in-card">
+    <div class="header">
+      <h1>🏢 Système SSE</h1>
+      <p>Connexion à votre espace de travail</p>
+    </div>
+
+    <!-- Formulaire de connexion -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Messages -->
+      <div *ngIf="error" class="alert error">{{ error }}</div>
+      <div *ngIf="success" class="alert success">{{ success }}</div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="votre.email@exemple.com">
+        <div *ngIf="emailControl?.invalid && emailControl?.touched" class="error-text">
+          Email requis et valide
+        </div>
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="password-input">
+          <input
+            id="password"
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Votre mot de passe">
+          <button type="button" (click)="togglePasswordVisibility()">
+            {{ isPasswordVisible ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div *ngIf="passwordControl?.invalid && passwordControl?.touched" class="error-text">
+          Mot de passe requis
+        </div>
+      </div>
+
+      <!-- Bouton de connexion -->
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || loading"
+        class="login-button">
+        <span *ngIf="!loading">🚀 Se connecter</span>
+        <span *ngIf="loading">⏳ Connexion...</span>
+      </button>
+    </form>
+
+    <!-- Lien vers l'inscription -->
+    <div class="register-link">
+      <p>Pas encore de compte ?
+        <a routerLink="/authentication/sign-up">S'inscrire</a>
+      </p>
+    </div>
+  </div>
+</div>

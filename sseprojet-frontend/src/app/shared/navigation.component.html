@@ -14,6 +14,19 @@
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle>{{ item.label }}</span>
       </a>
+
+      <!-- Séparateur et informations utilisateur -->
+      <mat-divider *ngIf="currentUser"></mat-divider>
+      <div *ngIf="currentUser" class="user-info">
+        <p class="user-name">{{ currentUser.nom }}</p>
+        <p class="user-role">{{ getUserRoleLabel(currentUser.type) }}</p>
+      </div>
+
+      <!-- Bouton de déconnexion -->
+      <a mat-list-item (click)="logout()" class="logout-item">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <span matListItemTitle>Déconnexion</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -33,8 +46,9 @@
         <mat-icon>account_circle</mat-icon>
       </button>
     </mat-toolbar>
-
-    <div class="content">
+    
+    <!-- Le contenu sera injecté ici via router-outlet -->
+    <div class="main-content">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

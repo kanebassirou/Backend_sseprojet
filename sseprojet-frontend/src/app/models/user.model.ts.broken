@@ -1,0 +1,87 @@
+export interface User {
+  id?:// Interfaces pour l'API JWT
+export interface LoginRequest {
+  email: string;
+  motDePasse: string; // Backend utilise 'motDePasse' pas 'password'
+}
+
+export interface LoginResponse {
+  token: string;
+  type: string; // "Bearer"
+  id: number;
+  email: string;
+  nom: string;
+  role: string; // Backend utilise 'role' comme string
+}
+
+export interface RegisterRequest {
+  nom: string;
+  email: string;
+  motDePasse: string; // Backend utilise 'motDePasse'
+  typeUtilisateur: UserType; // Backend utilise 'typeUtilisateur'
+}ring;
+  // prenom?: string;
+  email: string;
+  motDePasseHash?: string;
+  type: UserType;
+  dateCreation?: Date;
+  role?: string; // Pour compatibilité avec l'API JWT
+}
+
+export interface Administrateur extends User {
+  type: 'ADMINISTRATEUR';
+}
+
+export interface ChefDeProjet extends User {
+  type: 'CHEF_DE_PROJET';
+  projets?: Projet[];
+}
+
+export interface Decideur extends User {
+  type: 'DECIDEUR';
+}
+
+export interface Evaluateur extends User {
+  type: 'EVALUATEUR';
+  projet?: Projet;
+}
+
+export type UserType = 'ADMINISTRATEUR' | 'CHEF_DE_PROJET' | 'DECIDEUR' | 'EVALUATEUR';
+
+// Interfaces pour l'API JWT
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
+  message?: string;
+}
+
+export interface RegisterRequest {
+  nom: string;
+  // prenom: string;
+  email: string;
+  password: string;
+  type: UserType;
+}
+
+export interface CreateUserRequest {
+  nom: string;
+  prenom?: string;
+  email: string;
+  motDePasseHash: string;
+  type: UserType;
+}
+
+export interface EvaluateurDTO {
+  nom: string;
+  email: string;
+  motDePasseHash: string;
+  projetId?: number;
+}
+
+// Import pour éviter les erreurs de type
+import { Projet } from './projet.model';

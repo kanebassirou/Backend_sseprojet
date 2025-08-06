@@ -1,0 +1,47 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout pour pages non authentifiées (connexion) */
+.app-container:not(.authenticated) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Layout pour pages authentifiées */
+.app-container.authenticated {
+  background: #f5f5f5;
+}
+
+/* Contenu principal */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenu avec navigation */
+.main-content.with-nav {
+  padding: 0;
+}
+
+/* Contenu sans navigation (page de connexion) */
+.main-content:not(.with-nav) {
+  padding: 0;
+  width: 100%;
+}
+
+/* Assurer que router-outlet prend tout l'espace */
+router-outlet {
+  display: block;
+  flex: 1;
+}
+
+/* Styles spécifiques pour les pages d'authentification */
+.app-container:not(.authenticated) .main-content {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

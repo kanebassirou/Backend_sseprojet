@@ -1,100 +1,218 @@
-.dashboard-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+/* Dashboard Header */
+.dashboard-header {
+  margin-bottom: 2rem;
+  padding: 1.5rem 0;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 30px;
+.dashboard-header h1 {
+  font-size: 2rem;
   font-weight: 300;
+  color: #333;
+  margin: 0 0 0.5rem 0;
 }
 
-.loading, .error {
+.welcome-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.user-badge {
+  background-color: #3f51b5;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
   text-align: center;
-  padding: 40px;
 }
 
-.error {
+.loading-container mat-spinner {
+  margin-bottom: 1rem;
+}
+
+.error-container mat-icon {
+  font-size: 3rem;
+  height: 3rem;
+  width: 3rem;
   color: #f44336;
+  margin-bottom: 1rem;
 }
 
+/* Dashboard Content */
+.dashboard-content {
+  padding: 0;
+}
+
+/* Statistics Grid */
 .stats-grid {
-  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 }
 
 .stat-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .stat-card mat-card-header {
-  margin-bottom: 10px;
+  padding-bottom: 1rem;
 }
 
-.stat-card mat-card-title {
+.stat-card mat-card-header mat-icon {
+  width: 3rem;
+  height: 3rem;
+  font-size: 2rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  justify-content: center;
+  color: white;
+}
+
+/* Color coding for different card types */
+.stat-card.projets mat-icon {
+  background-color: #2196F3;
+}
+
+.stat-card.taches mat-icon {
+  background-color: #FF9800;
+}
+
+.stat-card.rapports mat-icon {
+  background-color: #4CAF50;
+}
+
+.stat-card.users mat-icon {
+  background-color: #9C27B0;
+}
+
+.stat-card.assigned mat-icon {
+  background-color: #607D8B;
+}
+
+.stat-card.evaluations mat-icon {
+  background-color: #E91E63;
 }
 
 .stat-number {
-  font-size: 36px;
-  font-weight: bold;
-  color: #3f51b5;
-  text-align: center;
-  margin: 10px 0;
-}
-
-.stat-label {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-}
-
-.stat-detail {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.stat-detail.warning {
-  color: #ff9800;
-  font-weight: 500;
-}
-
-.quick-actions {
-  margin-top: 40px;
-}
-
-.quick-actions h2 {
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
   font-weight: 300;
+  color: #333;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.stat-card mat-card-actions {
+  padding-top: 1rem;
+}
+
+/* Quick Actions Section */
+.quick-actions-section {
+  margin-bottom: 3rem;
+}
+
+.quick-actions-section h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #333;
+  margin-bottom: 1.5rem;
 }
 
 .actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.actions-grid button {
-  padding: 16px;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
+.action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+}
+
+.action-group button {
+  margin: 0;
+}
+
+.action-group button mat-icon {
+  margin-right: 0.5rem;
+}
+
+/* Recent Activity Section */
+.recent-activity-section {
+  margin-bottom: 2rem;
+}
+
+.recent-activity-section h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.activity-card {
+  min-height: 200px;
+}
+
+.no-activity {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 2rem;
+  margin: 0;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .stats-grid mat-grid-list {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .actions-grid {
+  .stats-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-message {
+    font-size: 1rem;
+  }
+
+  .user-badge {
+    display: block;
+    margin: 0.5rem 0 0 0;
+    width: fit-content;
+  }
+
+  .action-group {
+    flex-direction: column;
+  }
+
+  .action-group button {
+    width: 100%;
   }
 }
