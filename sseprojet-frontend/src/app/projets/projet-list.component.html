@@ -1,7 +1,7 @@
 <div class="projet-list-container">
   <div class="header">
     <h1>Gestion des Projets</h1>
-    <button mat-raised-button color="primary" routerLink="/projets/nouveau">
+    <button mat-raised-button color="primary" [routerLink]="['/app/projets/nouveau']">
       <mat-icon>add</mat-icon>
       Nouveau Projet
     </button>
@@ -130,12 +130,12 @@
             <td mat-cell *matCellDef="let projet">
               <div class="actions">
                 <button mat-icon-button
-                        [routerLink]="['/projets', projet.id]"
+                        [routerLink]="['/app/projets', projet.id]"
                         matTooltip="Voir détails">
                   <mat-icon>visibility</mat-icon>
                 </button>
                 <button mat-icon-button
-                        [routerLink]="['/projets', projet.id, 'edit']"
+                        [routerLink]="['/app/projets', projet.id, 'edit']"
                         matTooltip="Modifier">
                   <mat-icon>edit</mat-icon>
                 </button>

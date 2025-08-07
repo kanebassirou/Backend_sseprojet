@@ -61,6 +61,8 @@ export class JwtService {
   // Récupérer les headers d'autorisation
   getAuthHeaders(): { [key: string]: string } {
     const token = this.getToken();
+    console.log('JWT Service - Token:', token ? `${token.substring(0, 50)}...` : 'Aucun token');
+    console.log('JWT Service - Token expiré:', this.isTokenExpired(token || undefined));
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 }

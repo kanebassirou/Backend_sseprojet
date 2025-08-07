@@ -1,10 +1,7 @@
 package com.sseprojet.sseprojet.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 /**
@@ -47,6 +44,22 @@ public class CreateProjetRequest {
     private String description;
     
     @Schema(
+        description = "Objectifs du projet",
+        example = "Améliorer l'expérience client en rendant le processus d'achat plus fluide et accessible",
+        maxLength = 500
+    )
+    @Size(max = 500, message = "Les objectifs ne peuvent pas dépasser 500 caractères")
+    private String objectifs;
+    
+    @Schema(
+        description = "Budget alloué au projet en euros (peut être un nombre décimal)",
+        example = "75000",
+        minimum = "0"
+    )
+    @PositiveOrZero(message = "Le budget doit être positif ou zéro")
+    private Double budget;
+    
+    @Schema(
         description = "Date de début prévue du projet au format YYYY-MM-DD",
         example = "2025-01-15",
         required = true,
@@ -65,17 +78,9 @@ public class CreateProjetRequest {
     private LocalDate dateFin;
     
     @Schema(
-        description = "Budget alloué au projet en euros (nombre entier)",
-        example = "75000",
-        minimum = "1"
-    )
-    @Positive(message = "Le budget doit être positif")
-    private Integer budget;
-    
-    @Schema(
         description = "Statut actuel du projet",
         example = "EN_COURS",
-        allowableValues = {"PLANIFIE", "EN_COURS", "TERMINE", "SUSPENDU"},
+        allowableValues = {"PLANIFIE", "EN_COURS", "TERMINE", "SUSPENDU", "ANNULE"},
         defaultValue = "PLANIFIE"
     )
     private String statut;
@@ -116,6 +121,22 @@ public class CreateProjetRequest {
         this.description = description;
     }
     
+    public String getObjectifs() {
+        return objectifs;
+    }
+    
+    public void setObjectifs(String objectifs) {
+        this.objectifs = objectifs;
+    }
+    
+    public Double getBudget() {
+        return budget;
+    }
+    
+    public void setBudget(Double budget) {
+        this.budget = budget;
+    }
+    
     public LocalDate getDateDebut() {
         return dateDebut;
     }
@@ -130,14 +151,6 @@ public class CreateProjetRequest {
     
     public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
-    }
-    
-    public Integer getBudget() {
-        return budget;
-    }
-    
-    public void setBudget(Integer budget) {
-        this.budget = budget;
     }
     
     public String getStatut() {

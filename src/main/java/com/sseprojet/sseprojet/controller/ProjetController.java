@@ -2,6 +2,7 @@ package com.sseprojet.sseprojet.controller;
 
 import com.sseprojet.sseprojet.dto.CreateProjetRequest;
 import com.sseprojet.sseprojet.dto.ProjetResponse;
+import com.sseprojet.sseprojet.dto.UpdateProjetRequest;
 import com.sseprojet.sseprojet.model.ChefDeProjet;
 import com.sseprojet.sseprojet.model.Projet;
 import com.sseprojet.sseprojet.model.User;
@@ -22,6 +23,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import com.sseprojet.sseprojet.security.UserPrincipal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Contrôleur REST pour la gestion des projets
@@ -226,7 +233,7 @@ public class ProjetController {
             projet.setDescription(request.getDescription());
             projet.setDateDebut(request.getDateDebut());
             projet.setDateFin(request.getDateFin());
-            projet.setBudget(request.getBudget());
+            projet.setBudget(request.getBudget() != null ? request.getBudget().intValue() : null);
             projet.setStatut(request.getStatut() != null ? request.getStatut() : "PLANIFIE");
             projet.setChefDeProjet((ChefDeProjet) chefOpt.get());
             
@@ -260,15 +267,52 @@ public class ProjetController {
     public ResponseEntity<ProjetResponse> updateProjet(
             @Parameter(description = "ID du projet à mettre à jour", example = "1", required = true)
             @PathVariable Integer id, 
-            @RequestBody Projet projet) {
-        Optional<Projet> existingProjet = projetService.getProjetById(id);
-        if (existingProjet.isPresent()) {
-            projet.setId(id);
-            Projet updatedProjet = projetService.saveProjet(projet);
+            @Valid @RequestBody UpdateProjetRequest request,
+            Authentication auth) {
+        
+        try {
+            System.out.println("🚀 PUT /api/projets/" + id + " appelé par: " + auth.getName());
+            
+            // Vérifier que le projet existe
+            Optional<Projet> existingProjetOpt = projetService.getProjetById(id);
+            if (existingProjetOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Projet existingProjet = existingProjetOpt.get();
+            
+            // Mettre à jour les champs
+            existingProjet.setTitre(request.getTitre());
+            existingProjet.setDescription(request.getDescription());
+            existingProjet.setDateDebut(request.getDateDebut());
+            existingProjet.setDateFin(request.getDateFin());
+            existingProjet.setBudget(request.getBudget() != null ? request.getBudget().intValue() : null);
+            
+            if (request.getStatut() != null) {
+                existingProjet.setStatut(request.getStatut());
+            }
+            
+            // Mettre à jour le chef de projet si fourni
+            if (request.getChefDeProjetId() != null) {
+                Optional<User> chefOpt = userService.getUserById(request.getChefDeProjetId());
+                if (chefOpt.isPresent() && chefOpt.get() instanceof ChefDeProjet) {
+                    existingProjet.setChefDeProjet((ChefDeProjet) chefOpt.get());
+                }
+            }
+            
+            // Sauvegarder
+            Projet updatedProjet = projetService.saveProjet(existingProjet);
             ProjetResponse response = projetMapperService.convertToResponse(updatedProjet);
+            
+            System.out.println("✅ Projet mis à jour avec ID: " + updatedProjet.getId());
+            
             return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la mise à jour: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.notFound().build();
     }
     
     @Operation(
@@ -295,5 +339,24 @@ public class ProjetController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+    
+    // Ajoutez cette méthode temporaire pour le debug
+    @GetMapping("/test-permissions")
+    @Operation(summary = "Tester les permissions utilisateur")
+    public ResponseEntity<Map<String, Object>> testPermissions(Authentication auth) {
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("email", userPrincipal.getEmail());
+        response.put("role", userPrincipal.getRole());
+        response.put("authorities", userPrincipal.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList()));
+        response.put("canCreateProject", userPrincipal.getAuthorities().stream()
+            .anyMatch(auth2 -> auth2.getAuthority().equals("ROLE_CHEF_PROJET") || 
+                              auth2.getAuthority().equals("ROLE_ADMINISTRATEUR")));
+        
+        return ResponseEntity.ok(response);
     }
 }

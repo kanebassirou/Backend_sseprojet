@@ -23,7 +23,7 @@ import { forkJoin } from 'rxjs';
     MatProgressSpinnerModule,
     RouterModule
   ],
-  templateUrl: './dashboard.component.html',
+  templateUrl: './dashboard-new.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {

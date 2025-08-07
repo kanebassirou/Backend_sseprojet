@@ -53,15 +53,15 @@ export const routes: Routes = [
         loadComponent: () => import('./projets/projet-list.component').then(m => m.ProjetListComponent)
       },
       {
+        path: 'projets/nouveau',
+        loadComponent: () => import('./projets/projet-form.component').then(m => m.ProjetFormComponent)
+      },
+      {
         path: 'projets/:id',
         loadComponent: () => import('./projets/projet-detail.component').then(m => m.ProjetDetailComponent)
       },
       {
         path: 'projets/:id/edit',
-        loadComponent: () => import('./projets/projet-form.component').then(m => m.ProjetFormComponent)
-      },
-      {
-        path: 'projets/nouveau',
         loadComponent: () => import('./projets/projet-form.component').then(m => m.ProjetFormComponent)
       },
       {

@@ -142,7 +142,7 @@ export class ProjetListComponent implements OnInit {
   formatBudget(budget: number): string {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'EUR'
+      currency: 'CFA'
     }).format(budget);
   }
 }

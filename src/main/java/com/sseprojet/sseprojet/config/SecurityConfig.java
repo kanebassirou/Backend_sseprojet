@@ -5,6 +5,7 @@ import com.sseprojet.sseprojet.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -65,11 +66,19 @@ public class SecurityConfig {
                 // Endpoints d'administration (ADMINISTRATEUR uniquement)
                 .requestMatchers("/api/users/**").hasRole("ADMINISTRATEUR")
                 
-                // Endpoints de projets (CHEF_PROJET et ADMINISTRATEUR)
-                .requestMatchers("/api/projets/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR", "DECIDEUR")
+                // === PROJETS - Configuration par méthode HTTP ===
+                .requestMatchers(HttpMethod.GET, "/api/projets/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR", "DECIDEUR", "EVALUATEUR")
+                .requestMatchers(HttpMethod.POST, "/api/projets/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PUT, "/api/projets/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PATCH, "/api/projets/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.DELETE, "/api/projets/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR")
                 
-                // Endpoints de tâches (CHEF_PROJET et EVALUATEUR)
-                .requestMatchers("/api/taches/**").hasAnyRole("CHEF_PROJET", "EVALUATEUR", "ADMINISTRATEUR")
+                // === TÂCHES - Configuration par méthode HTTP ===
+                .requestMatchers(HttpMethod.GET, "/api/taches/**").hasAnyRole("CHEF_PROJET", "EVALUATEUR", "ADMINISTRATEUR", "DECIDEUR")
+                .requestMatchers(HttpMethod.POST, "/api/taches/**").hasAnyRole("CHEF_PROJET", "EVALUATEUR", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PUT, "/api/taches/**").hasAnyRole("CHEF_PROJET", "EVALUATEUR", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.PATCH, "/api/taches/**").hasAnyRole("CHEF_PROJET", "EVALUATEUR", "ADMINISTRATEUR")
+                .requestMatchers(HttpMethod.DELETE, "/api/taches/**").hasAnyRole("CHEF_PROJET", "ADMINISTRATEUR")
                 
                 // Endpoints de rapports (Tous les rôles authentifiés)
                 .requestMatchers("/api/rapports/**").hasAnyRole("CHEF_PROJET", "EVALUATEUR", "DECIDEUR", "ADMINISTRATEUR")
@@ -93,9 +102,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://votre-domaine-autorise.com"));
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Disposition"));
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

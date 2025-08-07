@@ -92,12 +92,22 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Chef de projet</mat-label>
             <mat-select formControlName="chefDeProjetId">
+              <mat-option value="">-- Sélectionner un chef de projet --</mat-option>
               <mat-option *ngFor="let chef of chefsDeProjet" 
                          [value]="chef.id">
                 {{ chef.nom }} ({{ chef.email }})
               </mat-option>
             </mat-select>
-            <mat-error>Le chef de projet est requis</mat-error>
+            <mat-error *ngIf="projetForm.get('chefDeProjetId')?.hasError('required')">
+              Le chef de projet est requis
+            </mat-error>
+            <!-- Debug: Afficher le nombre de chefs chargés -->
+            <mat-hint *ngIf="chefsDeProjet.length === 0">
+              Aucun chef de projet trouvé. Vérifiez la console pour les erreurs.
+            </mat-hint>
+            <mat-hint *ngIf="chefsDeProjet.length > 0">
+              {{ chefsDeProjet.length }} chef(s) de projet disponible(s)
+            </mat-hint>
           </mat-form-field>
         </div>
 
